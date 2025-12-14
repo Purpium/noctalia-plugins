@@ -6,6 +6,7 @@ import qs.Modules.Bar.Extras
 import qs.Services.UI
 import qs.Widgets
 import qs.Services.System
+import org.kde.kirigami.primitives as Kirigami
 
 Rectangle {
     id: root
@@ -62,24 +63,20 @@ Rectangle {
     property int frameIndex: 0
     property bool isRunning: true
     
-    // Detect Light Mode (Dark Text = Light Mode)
-    readonly property bool isLightMode: (Color.mOnSurface.r * 0.299 + Color.mOnSurface.g * 0.587 + Color.mOnSurface.b * 0.114) < 0.5
-    readonly property string iconPrefix: isLightMode ? "icons/black/" : "icons/"
-
     readonly property var icons: [
-        root.iconPrefix + "my-active-0-symbolic.svg",
-        root.iconPrefix + "my-active-1-symbolic.svg",
-        root.iconPrefix + "my-active-2-symbolic.svg",
-        root.iconPrefix + "my-active-3-symbolic.svg",
-        root.iconPrefix + "my-active-4-symbolic.svg"
+        "icons/my-active-0-symbolic.svg",
+        "icons/my-active-1-symbolic.svg",
+        "icons/my-active-2-symbolic.svg",
+        "icons/my-active-3-symbolic.svg",
+        "icons/my-active-4-symbolic.svg"
     ]
     
     property int idleFrameIndex: 0
     readonly property var idleIcons: [
-        root.iconPrefix + "my-idle-0-symbolic.svg",
-        root.iconPrefix + "my-idle-1-symbolic.svg",
-        root.iconPrefix + "my-idle-2-symbolic.svg",
-        root.iconPrefix + "my-idle-3-symbolic.svg"
+        "icons/my-idle-0-symbolic.svg",
+        "icons/my-idle-1-symbolic.svg",
+        "icons/my-idle-2-symbolic.svg",
+        "icons/my-idle-3-symbolic.svg"
     ]
 
     property real cpuUsage: SystemStatService.cpuUsage
@@ -113,7 +110,7 @@ Rectangle {
         return actuallyRunning ? (pluginApi.tr("tooltip.running") || "Running") : (pluginApi.tr("tooltip.sleeping") || "Sleeping");
     }
     
-    Image {
+    Kirigami.Icon {
         id: iconImage
         source: root.currentIconSource
         anchors.centerIn: parent
@@ -130,10 +127,8 @@ Rectangle {
         }
         height: width
         
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-        mipmap: true
-        visible: true
+        isMask: true
+        color: Settings.data.colorSchemes.darkMode ? "white" : "black"
     }
     
 
