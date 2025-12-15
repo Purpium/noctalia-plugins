@@ -1,0 +1,87 @@
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import qs.Commons
+import qs.Widgets
+import Quickshell.Io
+
+Rectangle {
+  id: root
+
+  // Plugin API (injected by PluginService)
+  property var pluginApi: null
+
+  // Required properties for bar widgets
+  property ShellScreen screen
+  property string widgetId: ""
+  property string section: ""
+
+  // CPU Data
+  property real cpuUsage: 0
+  property var coreUsage: []
+  
+  implicitWidth: row.implicitWidth + Style.marginM * 2
+  implicitHeight: Style.barHeight
+
+  color: Style.capsuleColor
+  radius: Style.radiusM
+
+  // Quickshell process
+  Process {
+        id: cpuProc
+        command: ["dgop", "cpu", "--no-cpu"]
+
+        stdout: SplitParser {
+            // called for each line of stdout
+            onRead: function(data) {
+                if (!data) return
+                data = data.trim()
+
+                // match line with "Usage: XX.X%"
+                var usageMatch = data.match(/^Usage:\s*([\d.]+)%/)
+                if (usageMatch) {
+                    cpuUsage = parseFloat(usageMatch[1])
+                }
+
+                // match line with "Core Usage: ..."
+                if (data.startsWith("Core Usage:")) {
+                    // extract all percentages
+                    var coresText = data.replace("Core Usage:", "").trim()
+                    var coreMatches = coresText.match(/[\d.]+%/g)
+                    if (coreMatches) {
+                        coreUsage = coreMatches.map(function(x) {
+                            return parseFloat(x)
+                        })
+                    }
+                }
+            }
+        }
+
+        Component.onCompleted: running = true
+    }
+  
+  // Timer for updating CPU data
+  Timer {
+        interval: 2000       // every 2 seconds
+        running: true        // start immediately
+        repeat: true         // keep going
+        onTriggered: cpuProc.running = true
+    }
+     
+  RowLayout {
+    id: row
+    anchors.centerIn: parent
+    spacing: Style.marginS
+
+    NIcon {
+      icon: "heart"
+      color: Color.mPrimary
+    }
+
+    NText {
+      text: cpuUsage.toFixed(1) + "%"
+      color: Color.mOnSurface
+      pointSize: Style.fontSizeS
+    }
+  }
+}
