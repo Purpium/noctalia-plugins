@@ -5,10 +5,10 @@ Just another system monitor plugin
 ## Features
 
 - **CPU status**: Shows CPU usage
-- **Memory Usage TODO**:
+- **Memory Usage**
   - 
   - Show which processes are using memory and sort them by usage on a panel
-- *
+
 
 ## Installation
 
