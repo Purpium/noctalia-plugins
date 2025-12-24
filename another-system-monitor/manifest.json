@@ -1,0 +1,19 @@
+{
+    "id": "another-system-monitor",
+    "name": "Another System Monitor",
+    "version": "1.0.0",
+    "minNoctaliaVersion": "3.6.2",
+    "author": "Purpium",
+    "license": "MIT",
+    "repository": "https://github.com/Purpium/noctalia-plugins",
+    "description": "Just another system monitor plugin",
+    "entryPoints": {
+        "barWidget": "BarWidget.qml"
+    },
+    "dependencies": {
+        "plugins": []
+    },
+    "metadata": {
+        "defaultSettings": {}
+    }
+}
